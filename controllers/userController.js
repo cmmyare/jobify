@@ -27,21 +27,23 @@ export const getApplicationStats = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const newUser = { ...req.body };
-    console.log("this is new user ", newUser)
-    delete newUser.password;
+    const obj = { ...req.body };
+    delete obj.password;
 
     if (req.file) {
-      const response = await cloudinary.v2.uploader.upload(req.file.path);
-      newUser.avatar = response.secure_url;
-      newUser.avatarPublicId = response.public_id;
+      // Convert image to base64 string
+      const imageBuffer = req.file.buffer; // Get the image buffer from multer
+      const base64Image = imageBuffer.toString("base64"); // Convert to base64 string
+
+      // Set the base64 image to the avatar field
+      obj.avatar = `data:${req.file.mimetype};base64,${base64Image}`;
     }
-    const updatedUser = await User.findByIdAndUpdate(userId, newUser, {
+
+    const updatedUser = await User.findByIdAndUpdate(userId, obj, {
       new: true,
+      runValidators: true,
     });
-    if(req.file && updateUser.avatarPublicId){
-      await cloudinary.v2.uploader.destroy(updatedUser.avatarPublicId)
-    }
+
     res.status(StatusCodes.OK).json({ msg: "User updated", user: updatedUser });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ msg: error.message });
