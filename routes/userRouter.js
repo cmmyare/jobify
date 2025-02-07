@@ -13,14 +13,16 @@ import upload from "../middleware/multerMiddleware.js";
 const router = Router();
 
 router.get("/current-user", getCurrentUser);
-router.get(
-  "/admin/app-stats",
-  [authorizedPermissions("admin")],
-  getApplicationStats
-);
+router.get("/admin/app-stats", [
+  authorizedPermissions("admin"),
+  getApplicationStats,
+]);
+
 router.patch(
   "/update-user",
-  [checkForTestUser, upload.single("avatar"), validateUpdateUserInput],
+  upload.single("avatar"),
+  checkForTestUser,
+  validateUpdateUserInput,
   updateUser
 );
 
