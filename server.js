@@ -53,11 +53,11 @@ app.use("*", (req, res) => {
 app.use(errorHandlerMiddleware);
 const port = process.env.PORT || 5100;
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.CLOUD_API,
+//   api_secret: process.env.CLOUD_API_SECRET,
+// });
 
 // mongoose
 try {
